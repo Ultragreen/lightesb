@@ -1,0 +1,28 @@
+---
+logger:
+  :service: Carioca::Services::InternalLogger
+  :resource: logger
+  :description: The standard ruby Logger internal wrapper Service
+  :type: :builtin
+  :init_options:
+    :target: /tmp/log.file
+configuration:
+  :service: Carioca::Services::Configuration
+  :type: :builtin
+  :description: The Carioca Configuration Service
+  :resource: configuration
+  :init_options:
+    :config_file: ./.config
+debug:
+  :service: Carioca::Services::ProxyDebug
+  :type: :builtin
+  :description: Proxy class debugger Service for Carioca
+  :resource: debug
+application:
+  :type: :gem_file
+  :resource: ultragreen:lib/lightesb/application.rb
+  :description: a test service
+  :service: LightESB::Application
+  :init_options:
+    :config_file: '../../conf/lightesb.conf' 
+    :xml_input: true

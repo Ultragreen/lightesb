@@ -1,22 +1,22 @@
-
-module Sequences
-
-  class Task < Definition
+module LightESB
+  module Sequences
     
-    def initialize(options = {})
-      super(options)
-      @proc = eval "lambda { " + options[:proc] + " }" if options[:proc]
+    class Task < Definition
+      
+      def initialize(options = {})
+        super(options)
+        @proc = eval "lambda { " + options[:proc] + " }" if options[:proc]
+      end
+      
+      def run 
+        @proc.call if @proc
+        return true
+      end
     end
     
-    def run 
-      @proc.call if @proc
-      return true
-    end
+    
   end
-  
-  
 end
-
 
 
 

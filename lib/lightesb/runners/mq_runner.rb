@@ -1,9 +1,9 @@
 require "bunny"
-require_relative './application.rb'
-require_relative './sequences/loader.rb'
+require_relative '../application.rb'
+require_relative '../sequences/loader.rb'
 
 
-application = Application.init :config_file => './conf/lightesb.conf', :xml_input => true
+application = LightESB::Application.init :config_file => '../../conf/lightesb.conf', :xml_input => true
 
 
 conn = Bunny.new
@@ -21,7 +21,7 @@ begin
     seq= application.settings[:esb][:sequences][:sequence].select {|item| item[:name] == content[:sequence] }.first
     p application.settings
 
-    sequence = Sequences::Loader::new({:hash => seq, :id => content[:id], :name => content[:sequence]}).sequence
+    sequence = LightESB::Sequences::Loader::new({:hash => seq, :id => content[:id], :name => content[:sequence]}).sequence
     p sequence
 
     sequence.execute

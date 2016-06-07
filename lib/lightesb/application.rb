@@ -6,6 +6,7 @@ require 'xmlsimple'
 
 # overwriting Hash class 
 # @private
+
 class Hash
 
   # recursively transform Hash keys form String to Symbols 
@@ -32,7 +33,7 @@ class Hash
   end
 end
     
-
+module LightESB
     # settings Hash record utilities class
     # @note please do not use Standalone ( dependancy of Configuration class )
     # @private
@@ -164,5 +165,5 @@ end
 
       
     end
-
+end
 

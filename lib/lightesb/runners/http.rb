@@ -7,10 +7,10 @@ require_relative '../sequences/loader.rb'
 require 'pp'
 
 
-app = Application.init :config_file => './conf/lightesb.conf', :xml_input => true
+app = LightESB::Application.init :config_file => '../../conf/lightesb.conf', :xml_input => true
 routes = []
 
-inputManager = Inputs::Init::new :hash => app.settings[:esb][:sequences]
+inputManager = LightESB::Inputs::Init::new :hash => app.settings[:esb][:sequences]
 inputManager.inputs.select{|i| i[:type] == "http"}.each do |input|
   val = input[:params]
   val[:verb].map!(&:to_sym)
@@ -22,7 +22,7 @@ end
 routes.each do |item|
   item[:verb].each do |verb|
     route verb, item[:path] do
-      connector =  Connectors::HTTP::new :body => request.body.read , :sequence => item[:sequence] 
+      connector =  LightESB::Connectors::HTTP::new :body => request.body.read , :sequence => item[:sequence] 
       connector.consume
     end
   end

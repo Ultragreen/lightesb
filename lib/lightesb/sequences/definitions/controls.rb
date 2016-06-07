@@ -1,12 +1,14 @@
-module Sequences
-  
-  class Control < Definition
-    def run 
-      return true
+module LightESB
+  module Sequences
+    
+    class Control < Definition
+      def run 
+        return true
+      end
+      
     end
     
   end
-
 end
 
 require_relative './controls/conditions.rb'

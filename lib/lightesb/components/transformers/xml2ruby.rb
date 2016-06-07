@@ -3,8 +3,10 @@ require 'yaml'
 
 require_relative '../transformers.rb'
 
-class Xml2yaml < Transformer
-  def processor(payload)
-    return Hash.from_xml( payload )
+module LightESB
+  class Xml2yaml < Transformer
+    def processor(payload)
+      return Hash.from_xml( payload )
+    end
   end
 end

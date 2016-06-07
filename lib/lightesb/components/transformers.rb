@@ -1,4 +1,9 @@
 require_relative '../components.rb'
 
-class Transformer < Component
+module LightESB
+  
+  class Transformer < Component
+  end
+  
+  
 end

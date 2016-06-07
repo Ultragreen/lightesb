@@ -98,15 +98,6 @@ module LightESB
       attr_accessor :settings
 
 
-      private_class_method :new
-      @@inst = nil
-
-      
-      def Application.init(options = nil)
-        @@inst = new(options) if @@inst.nil?
-        return @@inst
-      end
-      singleton_class.send(:alias_method, :get, :init)
  
       # Configuration service constructor (open config)
       # @param [Hash] options the params

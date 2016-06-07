@@ -20,9 +20,9 @@ debug:
   :resource: debug
 application:
   :type: :gem_file
-  :resource: ultragreen:lib/lightesb/application.rb
+  :resource: lightesb:lib/lightesb/application.rb
   :description: a test service
   :service: LightESB::Application
   :init_options:
-    :config_file: '../../conf/lightesb.conf' 
+    :config_file: './conf/lightesb.conf' 
     :xml_input: true

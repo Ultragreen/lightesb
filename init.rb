@@ -18,13 +18,13 @@ module LightESB
     def initialize
       @registry = Carioca::Services::Registry.init :file => 'conf/lightesb.registry'
       @configuration = @registry.start_service :name => 'configuration'
-      pp @configuration
+#      pp @configuration
     end
 
 
     def launch
-#      runners = ['Direct','MQ','HTTP']
-       runners = []
+      runners = ['Direct','MQ','HTTP']
+#       runners = []
       runners.each do |runner|
         print "Starting LightESB : #{runner} Runner" 
         daemonize :description => "LightESB : #{runner} Runner", :pid_file => "/tmp/#{runner}" do

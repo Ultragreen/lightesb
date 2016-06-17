@@ -6,13 +6,15 @@ module LightESB
       def initialize(options = {})
         @pattern = options[:params][:pattern]
         @path = options[:params][:path] 
+        @registry = Carioca::Services::Registry.init :file => 'conf/lightesb.registry'
+        @log = @registry.get_service :name => 'log_client'
         super(options)
       end
       
       def scan
         Dir["#{@path}/#{@pattern}"].each do |file|
           data = @application.settings
-          puts "running for #{file}"
+          @log.info " [>] running for #{file}"
           file_content = ::File::readlines(file).join('\n')
           FileUtils::rm file
           init_sequence(file_content)

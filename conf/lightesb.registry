@@ -12,17 +12,15 @@ configuration:
   :description: The Carioca Configuration Service
   :resource: configuration
   :init_options:
-    :config_file: ./.config
-debug:
-  :service: Carioca::Services::ProxyDebug
-  :type: :builtin
-  :description: Proxy class debugger Service for Carioca
-  :resource: debug
-application:
-  :type: :gem_file
-  :resource: lightesb:lib/lightesb/application.rb
-  :description: a test service
-  :service: LightESB::Application
-  :init_options:
     :config_file: './conf/lightesb.conf' 
     :xml_input: true
+    :force_array:
+      - sequence
+      - step
+log_client:
+  :service: LightESB::Services::LogClient
+  :resource: lightesb:lib/lightesb/services/log_client.rb
+  :description: The standard ruby Logger internal wrapper Service
+  :type: :gem_file
+  :init_options:
+    :target: /tmp/log.file

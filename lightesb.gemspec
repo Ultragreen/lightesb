@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Romain GEORGES"]
   spec.email         = ["romain@ultragreen.net"]
   spec.summary       = %q{LightESB: the tiny mini Ruby ESB }
-  spec.description   = %q{Clearest: ESB written in Ruby}
+  spec.description   = %q{LightESB: ESB written in Ruby}
   spec.homepage      = "http://github.com/Ultragreen/lightesb"
   spec.license       = "BSD-2"
   spec.files         = `git ls-files -z`.split("\x0")

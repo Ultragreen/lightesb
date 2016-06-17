@@ -16,6 +16,8 @@ module LightESB
       attr_accessor :payload
       
       def initialize(options = {})
+        @registry = Carioca::Services::Registry.init :file => 'conf/lightesb.registry'
+        @log = @registry.start_service :name => 'log_client'
         @flow = Array::new
         @id = options[:id] || SecureRandom.uuid 
         @name = options[:name] || 'Default_Sequence'
@@ -33,6 +35,7 @@ module LightESB
       
       
       def execute
+        @log.info " [X] execute Sequence #{@name} #{@id} "
         @flow.each do |step|
           step.run 
         end

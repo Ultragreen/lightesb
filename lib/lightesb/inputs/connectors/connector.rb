@@ -4,11 +4,14 @@ module LightESB
       
       def initialize(options = {})
         @sequence = options[:sequence]
-        @application = Application.get
+        registry = Carioca::Services::Registry.init :file => Dir.pwd + '/conf/lightesb.registry'
+        @application  = registry.start_service :name => 'configuration'
+        @log = registry.start_service :name => 'log_client'
       end
       
       private
       def init_sequence(content)
+
         seq= @application.settings[:esb][:sequences][:sequence].select {|item| item[:name] == @sequence }.first
         sequence = Sequences::Loader::new({:hash => seq}).sequence
         sequence.payload.set_input content
@@ -19,7 +22,7 @@ module LightESB
         q    = ch.queue("lightesb.sequences.inputs")
         ch.default_exchange.publish({ :id => sequence.id, :sequence => @sequence}.to_yaml, :routing_key => q.name)
         
-        puts " [x] send "
+        @log.info " [x] send sequence #{@sequence} instance #{sequence.id} to MQ"
         conn.close
         
         

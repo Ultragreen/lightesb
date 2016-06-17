@@ -17,7 +17,8 @@ configuration:
     :force_array:
       - sequence
       - step
-log_client:
+      - log
+logclient:
   :service: LightESB::Services::LogClient
   :resource: lightesb:lib/lightesb/services/log_client.rb
   :description: The standard ruby Logger internal wrapper Service

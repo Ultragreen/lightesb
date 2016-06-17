@@ -15,7 +15,7 @@ module LightESB
       def initialize(*args)
         @registry = Carioca::Services::Registry.init :file => Dir.pwd + '/conf/lightesb.registry'
         @configuration  = @registry.start_service :name => 'configuration'
-        @log = @registry.start_service :name => 'log_client'
+        @log = @registry.start_service :name => 'logclient'
         @input_manager = LightESB::Inputs::Init::new :hash => @configuration.settings[:esb][:sequences]
         @routes = []
         @input_manager.inputs.select{|i| i[:type] == "http"}.each do |input|
@@ -36,7 +36,7 @@ module LightESB
           item[:verb].each do |verb|
             SinatraApp.send(verb, item[:path]) do
               @registry = Carioca::Services::Registry.init :file => Dir.pwd + '/conf/lightesb.registry'
-              @log = @registry.start_service :name => 'log_client'
+              @log = @registry.start_service :name => 'logclient'
               @log.info " [*] match route #{item[:path]} with verb : #{verb}"
               connector =  LightESB::Connectors::HTTP::new :body => request.body.read , :sequence => item[:sequence] 
               connector.consume

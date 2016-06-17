@@ -6,7 +6,7 @@ module LightESB
         @sequence = options[:sequence]
         registry = Carioca::Services::Registry.init :file => Dir.pwd + '/conf/lightesb.registry'
         @application  = registry.start_service :name => 'configuration'
-        @log = registry.start_service :name => 'log_client'
+        @log = registry.start_service :name => 'logclient'
       end
       
       private

@@ -36,7 +36,7 @@ module LightESB
         
         @connection = Bunny.new
         @connection.start
-        @channel   = conn.create_channel
+        @channel   = @connection.create_channel
         @queue    = @channel.queue(@configuration.settings.esb.base.logs.queue)
         
       end

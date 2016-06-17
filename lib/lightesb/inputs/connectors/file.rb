@@ -7,7 +7,7 @@ module LightESB
         @pattern = options[:params][:pattern]
         @path = options[:params][:path] 
         @registry = Carioca::Services::Registry.init :file => 'conf/lightesb.registry'
-        @log = @registry.get_service :name => 'log_client'
+        @log = @registry.get_service :name => 'logclient'
         super(options)
       end
       

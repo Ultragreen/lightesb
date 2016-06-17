@@ -10,7 +10,7 @@ module LightESB
       attr_reader :name
       def initialize(options = {})
         @registry = Carioca::Services::Registry.init :file => 'conf/lightesb.registry'
-        @log = @registry.start_service :name => 'log_client'
+        @log = @registry.start_service :name => 'logclient'
         @sequence_id = options[:sequence]
         @name = options[:name] || 'default_step_' + @id
         @definition = options[:definition]

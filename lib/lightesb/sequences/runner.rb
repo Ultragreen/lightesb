@@ -17,7 +17,7 @@ module LightESB
       
       def initialize(options = {})
         @registry = Carioca::Services::Registry.init :file => 'conf/lightesb.registry'
-        @log = @registry.start_service :name => 'log_client'
+        @log = @registry.start_service :name => 'logclient'
         @flow = Array::new
         @id = options[:id] || SecureRandom.uuid 
         @name = options[:name] || 'Default_Sequence'

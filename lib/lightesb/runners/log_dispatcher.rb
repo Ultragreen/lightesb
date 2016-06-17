@@ -1,5 +1,4 @@
 require "bunny"
-#require_relative '../application.rb'
 require_relative '../sequences/loader.rb'
 require 'carioca'
 
@@ -23,7 +22,7 @@ module LightESB
       def open_target
         @pool = []
         @map.each do |target|
-          @pool.push {:source => target[:from], :logger => @registry.start_service({:name => "log_#{target[:from]}", :params => { :target => "#{@path}/#{target[:to]}" }})
+          @pool.push {:source => target[:from], :logger => @registry.start_service({:name => "log_#{target[:name]}", :params => { :target => "#{@path}/#{target[:to]}" }})
         end
       end
       
@@ -32,7 +31,7 @@ module LightESB
           @queue.subscribe(:block => true) do |delivery_info, properties, body|
             content = YAML::load(body)
             message = "#{content[:user]}@#{content[:hostname]}:#{content[:source]} : #{content[:message]}" 
-            @pool.select { |x| x[:source] == content[:source]}.each do |log|
+            @pool.select { |x| content[:source] =~ x[:source]}.each do |log|
               log.send content[:level], message
             end
           end

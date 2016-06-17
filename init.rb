@@ -1,4 +1,5 @@
 require 'rubygems' 
+require "lightesb"
 require 'carioca'
 require 'carioca/services'
 require_relative './lib/lightesb/helpers/application'

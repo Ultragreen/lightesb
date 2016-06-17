@@ -22,17 +22,17 @@ module LightESB
     require 'logger'
     
     # class LogFile for providing log capabilities to LightESB
-    class Log
+    class LogFile
 
-      def initialize( _options = { :target => '/tmp/log.file' , :source => 'main' } )
+      def initialize( _options = { :target => '/tmp/log.file'} )
         @agent_name = _options[:source] 
         @hostname = Socket.gethostname
-        @log_file = _options[:targe]
-        verif_path File.dirname(@log_file)
+        @log_file = _options[:target]
+        verif_path(File.dirname(@log_file))
         @registry = Carioca::Services::Registry.init :file => Dir.pwd + '/conf/lightesb.registry'
         @configuration = @registry.start_service :name => 'configuration'
         
-        @log = Logger::new
+        @log = Logger::new(@log_file)
         @log.formatter =  proc do |severity, datetime, progname, msg|
           "@#{@hostname} :\t#{datetime}: \t#{severity} \t #{progname}:\t#{msg}\n"
         end
@@ -42,7 +42,8 @@ module LightESB
 
       [:error,:fatal,:warning,:info,:debug].each do |methodname|
         define_method methodname do |message|
-          @log.send __method__ , @agent_name, { _message }
+          `echo #{__method__} >> /tmp/test.rge`
+          @log.send(__method__ , @agent_name) { message }
         end
       end
 
@@ -59,3 +60,5 @@ module LightESB
     end
   end
 end
+
+

@@ -21,7 +21,14 @@ configuration:
 logclient:
   :service: LightESB::Services::LogClient
   :resource: lightesb:lib/lightesb/services/log_client.rb
-  :description: The standard ruby Logger internal wrapper Service
+  :description: The lightesb Log client to MQ
   :type: :gem_file
   :init_options:
     :target: /tmp/log.file
+logfile:
+  :service: LightESB::Services::LogFile
+  :resource: lightesb:lib/lightesb/services/log.rb
+  :description: The logger proxy
+  :type: :gem_file
+  :init_options:
+    :target: /tmp/log.file    

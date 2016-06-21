@@ -7,6 +7,7 @@ require_relative './lib/lightesb/runners/mq.rb'
 require_relative './lib/lightesb/runners/direct.rb'
 require_relative './lib/lightesb/runners/http.rb'
 require_relative './lib/lightesb/runners/log_dispatcher.rb'
+require_relative './lib/lightesb/runners/scheduler.rb'
 require 'pp'
 
 
@@ -24,8 +25,8 @@ module LightESB
 
 
     def launch
-      runners = ['LogDispatcher','Direct','MQ','HTTP']
-#      runners = ['Direct']
+      runners = ['LogDispatcher','Scheduler','Direct','MQ','HTTP']
+      runners = ['Scheduler']
       
       runners.each do |runner|
         print "Starting LightESB : #{runner} Runner" 

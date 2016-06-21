@@ -10,5 +10,3 @@ q.subscribe(:block => true) do |delivery_info, properties, payload|
 end
 
 
-
-

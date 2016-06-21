@@ -31,10 +31,10 @@ module LightESB
         verif_path(File.dirname(@log_file))
         @registry = Carioca::Services::Registry.init :file => Dir.pwd + '/conf/lightesb.registry'
         @configuration = @registry.start_service :name => 'configuration'
-        
+        p @log_file
         @log = Logger::new(@log_file)
         @log.formatter =  proc do |severity, datetime, progname, msg|
-          "@#{@hostname} :\t#{datetime}: \t#{severity} \t #{progname}:\t#{msg}\n"
+          "@#{@hostname} :\t#{datetime}: \t#{severity} \t #{progname}:\t|#{msg}|\n"
         end
       end
 
@@ -42,7 +42,6 @@ module LightESB
 
       [:error,:fatal,:warning,:info,:debug].each do |methodname|
         define_method methodname do |message|
-          `echo #{__method__} >> /tmp/test.rge`
           @log.send(__method__ , @agent_name) { message }
         end
       end

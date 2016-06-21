@@ -10,7 +10,7 @@ module LightESB
       def initialize
         @registry = Carioca::Services::Registry.init :file => Dir.pwd + '/conf/lightesb.registry'
         @configuration  = @registry.start_service :name => 'configuration'
-        @log = @registry.start_service :name => 'logclient'
+        @log = @registry.start_service :name => 'logclient', :params => { :source => self.class.to_s }
         @input_manager = LightESB::Inputs::Init::new :hash => @configuration.settings[:esb][:sequences]
       end
 

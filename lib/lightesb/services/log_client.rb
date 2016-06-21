@@ -28,8 +28,9 @@ module LightESB
 
 
       
-      def initialize( _options = { :source => "main" })
+      def initialize( _options = { :source => "LightESB" })
         @source = _options[:source] 
+                
         @hostname = Socket.gethostname
         @registry = Carioca::Services::Registry.init :file => Dir.pwd + '/conf/lightesb.registry'
         @configuration = @registry.start_service :name => 'configuration'

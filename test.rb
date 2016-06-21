@@ -8,3 +8,7 @@ q = ch.queue("lightesb.logs.inputs", :exclusive => false)
 q.subscribe(:block => true) do |delivery_info, properties, payload|
   puts "Received #{payload}, message properties are #{properties.inspect}"
 end
+
+
+
+

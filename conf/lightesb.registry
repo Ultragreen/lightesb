@@ -1,11 +1,4 @@
 ---
-logger:
-  :service: Carioca::Services::InternalLogger
-  :resource: logger
-  :description: The standard ruby Logger internal wrapper Service
-  :type: :builtin
-  :init_options:
-    :target: /tmp/log.file
 configuration:
   :service: Carioca::Services::Configuration
   :type: :builtin
@@ -24,7 +17,7 @@ logclient:
   :description: The lightesb Log client to MQ
   :type: :gem_file
   :init_options:
-    :target: /tmp/log.file
+    :source: LightESB
 logfile:
   :service: LightESB::Services::LogFile
   :resource: lightesb:lib/lightesb/services/log.rb

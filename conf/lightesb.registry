@@ -11,6 +11,7 @@ configuration:
       - sequence
       - step
       - log
+      - backend
 logclient:
   :service: LightESB::Services::LogClient
   :resource: lightesb:lib/lightesb/services/log_client.rb

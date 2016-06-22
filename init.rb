@@ -4,6 +4,7 @@ require 'carioca'
 require 'carioca/services'
 require_relative './lib/lightesb/helpers/application'
 require_relative './lib/lightesb/runners/mq.rb'
+require_relative './lib/lightesb/runners/inputs_mq.rb'
 require_relative './lib/lightesb/runners/direct.rb'
 require_relative './lib/lightesb/runners/http.rb'
 require_relative './lib/lightesb/runners/log_dispatcher.rb'
@@ -26,7 +27,7 @@ module LightESB
 
     def test_repo
       repository =  @registry.start_service :name => 'repository'
-      file = test.get_file :name => '/test.txt'
+      file = repository.get_file :name => '/test.txt'
       p file.content
       p file.metadata
       file.metadata["teqdqdsts"] = 'testqsdqd'
@@ -35,8 +36,8 @@ module LightESB
     
 
     def launch
-      runners = ['LogDispatcher','Scheduler','Direct','MQ','HTTP']
-#      runners = ['Scheduler']
+      runners = ['LogDispatcher','Scheduler','Direct','MQ','HTTP','InputsMQ']
+      runners = ['InputsMQ']
       
       runners.each do |runner|
         print "Starting LightESB : #{runner} Runner" 
@@ -55,5 +56,5 @@ end
 
 
 esb = LightESB::Application::new
-#esb.launch
-esb.test_repo
+esb.launch
+#esb.test_repo

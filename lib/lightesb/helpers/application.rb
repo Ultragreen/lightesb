@@ -135,6 +135,7 @@ module LightESB
             end
           end
         rescue Timeout::Error
+          return false
         end
       end
       #!@endgroup

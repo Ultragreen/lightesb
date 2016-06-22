@@ -5,7 +5,7 @@ require 'carioca'
 module LightESB
   module Runners
 
-    class MQ
+    class InputsMQ
       def initialize
         @registry = Carioca::Services::Registry.init :file => Dir.pwd + '/conf/lightesb.registry'
         @configuration  = @registry.start_service :name => 'configuration'
@@ -13,28 +13,33 @@ module LightESB
         @connection = Bunny.new
         @connection.start
         @channel   = @connection.create_channel
-        @queue    = @channel.queue("lightesb.sequences.inputs")        
-      end
+        @queues = [{:name => 'test', :sequence => 'test'},{:name => 'testy', :sequence => 'qsdqsd'}]
+        @queues.each  do |queue|
+          queue[:queue]= @channel.queue(queue[:name])        
+        end
+        end
       
       def launch
-        @log.info " [*] Waiting for messages in #{@queue.name}."
+        @log.info " [*] Preparing MQ Inputs}."
         begin
-          @queue.subscribe(:block => true) do |delivery_info, properties, body|
-            content = YAML::load(body)
-            @log.info " [x] Received message for sequence #{content[:sequence]} : #{content[:id]}"
-            seq = @configuration.settings[:esb][:sequences][:sequence].select {|item| item[:name] == content[:sequence] }.first
-            sequence = LightESB::Sequences::Loader::new({:hash => seq, :id => content[:id], :name => content[:sequence]}).sequence
-            sequence.execute
+          @queues.each do |queue|
+            queue[:queue].subscribe(:block => false) do |delivery_info, properties, body|
+              @log.info queue[:name]
+              @log.info " [x] Received input for sequence #{queue[:sequence]} : forwarding"
+            end
           end
-          
+          loop do
+            sleep 10
+          end
+        end
+        
         rescue Interrupt => _
           @log.info " [END]  unsuscribe #{@queue.name}."
           @channel.close
           @connection.close
         end
       end
-      
-    end
     
   end
+  
 end

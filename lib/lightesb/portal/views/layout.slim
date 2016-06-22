@@ -1,0 +1,28 @@
+doctype 5
+html lang="fr-fr" dir="ltr"
+  head
+    title== @title || "The tiny mini Ruby ESB"
+    meta charset="utf-8"
+    link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
+    link rel="stylesheet" href="/css/uikit.gradient.min.css"
+    link rel="stylesheet" href="/css/components/sticky.gradient.min.css"
+    link rel="stylesheet" href="/styles.css"
+
+    script src="/js/jquery.min.js"
+    script src="/js/uikit.min.js"
+    script src="/js/components/sticky.min.js"
+
+  body 
+    div.uk-width-1-1.uk-visible-small.uk-text-center
+      img src="/images/logo_small.png"
+      br
+      span.uk-text-medium.uk-text-middle #{@title || "The tiny mini Ruby ESB"}
+    div.uk-width-1-1.uk-hidden-small
+      img src="/images/logo.png"
+      span.uk-text-large.uk-text-middle #{@title || "The tiny mini Ruby ESB"}    
+    == slim :nav, :format => :html
+    div.uk-grid
+      div.uk-width-9-1.uk-container.uk-container-center.uk-margin-left
+        div.uk-placeholder
+        == yield
+

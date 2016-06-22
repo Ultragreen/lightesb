@@ -1,5 +1,5 @@
 require "bunny"
-require_relative '../sequences/loader.rb'
+require_relative '../inputs/connectors/mq.rb'
 require 'carioca'
 
 module LightESB
@@ -26,6 +26,8 @@ module LightESB
             queue[:queue].subscribe(:block => false) do |delivery_info, properties, body|
               @log.info queue[:name]
               @log.info " [x] Received input for sequence #{queue[:sequence]} : forwarding"
+              connector =  LightESB::Connectors::MQ::new :body => body , :sequence => queue[:sequence]
+              connector.consume
             end
           end
           loop do

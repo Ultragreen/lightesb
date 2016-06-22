@@ -1,0 +1,16 @@
+nav.uk-navbar.uk-navbar-attached(data-uk-sticky)
+  a.uk-navbar-brand.uk-hidden-small href="/" #{@app_name || "LightESB"}
+  ul.uk-navbar-nav.uk-hidden-small
+    - for item in @menu
+      li class=( (item == @current_ite)? "uk-active" : "uk-inactive")
+        a href="/show/#{item}" title="Access to service #{item.capitalize} CRUD" #{item.capitalize}  
+  a.uk-navbar-toggle.uk-visible-small(href="#offcanvas" data-uk-offcanvas)
+  div.uk-navbar-brand.uk-navbar-center.uk-visible-small #{@app_name || "LightESB"}
+
+
+div#offcanvas.uk-offcanvas
+ div.uk-offcanvas-bar
+   ul.uk-nav.uk-nav-offcanvas
+     - for item in @menu
+       li class=( (item == @current_item)? "uk-active" : "uk-inactive")
+         a href="/show/#{item}" title="Access to service #{item.capitalize} CRUD" #{item.capitalize}

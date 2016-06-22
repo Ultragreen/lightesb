@@ -7,7 +7,6 @@ require 'pp'
 require 'carioca'
 
 
-
 module LightESB
   module Runners
     class HTTP 

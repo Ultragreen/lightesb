@@ -37,7 +37,7 @@ module LightESB
 
     def launch
       runners = ['LogDispatcher','Scheduler','Direct','MQ','HTTP','InputsMQ']
-      runners = ['InputsMQ']
+#      runners = ['InputsMQ']
       
       runners.each do |runner|
         print "Starting LightESB : #{runner} Runner" 

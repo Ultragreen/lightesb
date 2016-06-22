@@ -1,3 +1,6 @@
+# coding: utf-8
+require 'fileutils'
+# coding: utf-8
 module LightESB
   module Helpers
     module Application
@@ -60,6 +63,84 @@ module LightESB
         end
         return true
       end
+
+      # @!group facilités sur le système de fichier
+
+      # facilité de copy de fichier
+      # @param [Hash] options
+      # @option options [String] :source le chemin source du fichier
+      # @option options [String] :target le chemin cible du fichier
+      def copy_file(options = {})
+        FileUtils::copy options[:source], options[:target] unless File::exist? options[:target]
+      end
+
+      # facilité de création de répertoire
+      # @param [Hash] options
+      # @option options [String] :path le répertoire à créer (relatif ou absolut)
+      def make_folder(options = {})
+        FileUtils::mkdir_p options[:path] unless File::exist? options[:path]
+      end
+
+      # facilité de liaison symbolique  de fichier
+      # @param [Hash] options
+      # @option options [String] :source le chemin source du fichier
+      # @option options [String] :link le chemin du lien symbolique
+      def make_link(options = {})
+        FileUtils::rm options[:link] if (File::symlink? options[:link] and not File::exist? options[:link])
+        FileUtils::ln_s options[:source], options[:link] unless File::exist? options[:link]
+      end
+      # @!endgroup
+
+
+      #@!group  Vérifiers de l'application
+
+      # verifier d'existence d'un repertoire
+      # @return [Bool] vrai ou faux
+      # @param [Hash] options
+      # @option options [String] :path le répertoire à créer (relatif ou absolut)
+      def verify_folder(options ={})
+        return File.directory?(options[:path])
+      end
+
+      # verifier d'existence d'un lien
+      # @return [Bool] vrai ou faux
+      # @param [Hash] options
+      # @option options [String] :name path du lien
+      def verify_link(options ={})
+        return File.file?(options[:name])
+      end
+
+      # verifier d'existence d'un fichier
+      # @return [Bool] vrai ou faux
+      # @param [Hash] options
+      # @option options [String] :name path du fichier
+      def verify_file(options ={})
+        return File.file?(options[:name])
+      end
+
+      # verifier de l'ecoute d'un service sur un host et port donné en TCP
+      # @return [Bool] vrai ou faux
+      # @param [Hash] options
+      # @option options [String] :host le nom d'hote
+      # @option options [String] :port le port TCP
+      def verify_service(options ={})
+        begin
+          Timeout::timeout(1) do
+            begin
+              s = TCPSocket.new(options[:host], options[:port])
+              s.close
+              return true
+            rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
+              return false
+            end
+          end
+        rescue Timeout::Error
+        end
+      end
+      #!@endgroup
+
+
+
     end
   end
 end

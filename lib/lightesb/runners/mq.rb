@@ -1,5 +1,4 @@
 require "bunny"
-#require_relative '../application.rb'
 require_relative '../sequences/loader.rb'
 require 'carioca'
 

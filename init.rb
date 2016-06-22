@@ -20,13 +20,23 @@ module LightESB
     def initialize
       @registry = Carioca::Services::Registry.init :file => 'conf/lightesb.registry'
       @configuration = @registry.start_service :name => 'configuration'
-
+      
     end
 
 
+    def test_repo
+      repository =  @registry.start_service :name => 'repository'
+      file = test.get_file :name => '/test.txt'
+      p file.content
+      p file.metadata
+      file.metadata["teqdqdsts"] = 'testqsdqd'
+      file.save! :content => 'testqsdqsdqsd'
+    end
+    
+
     def launch
       runners = ['LogDispatcher','Scheduler','Direct','MQ','HTTP']
-      runners = ['Scheduler']
+#      runners = ['Scheduler']
       
       runners.each do |runner|
         print "Starting LightESB : #{runner} Runner" 
@@ -45,4 +55,5 @@ end
 
 
 esb = LightESB::Application::new
-esb.launch
+#esb.launch
+esb.test_repo

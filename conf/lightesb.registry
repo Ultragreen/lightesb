@@ -21,7 +21,15 @@ logclient:
 logfile:
   :service: LightESB::Services::LogFile
   :resource: lightesb:lib/lightesb/services/log.rb
-  :description: The logger proxy
+  :description: The LightESB logger proxy
   :type: :gem_file
   :init_options:
-    :target: /tmp/log.file    
+    :target: /tmp/log.file
+repository:
+  :service: LightESB::Services::Repository
+  :resource: lightesb:lib/lightesb/services/repository.rb
+  :description: The LightESB Repository Service
+  :type: :gem_file
+  :init_options:
+    :path: /tmp/lightesb/repository
+    

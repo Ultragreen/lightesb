@@ -5,13 +5,18 @@ module LightESB
     
     def initialize(options = {})
       @ref = options[:id]
-      @store  = Backends::RedisDatabase::new
+      @store  = Backends::RedisDatabase::new :destination => 'payloads'
       @content = {:input => ''}
       if @store.exist?({:key => @ref}) then
         refresh
       else
         persist!
       end
+    end
+    
+    def get
+      refresh
+      return @content
     end
     
     def get_input

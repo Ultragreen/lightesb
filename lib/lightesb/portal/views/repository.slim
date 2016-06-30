@@ -1,0 +1,49 @@
+javascript:
+  var linkElement = document.createElement("link");
+  linkElement.rel = "stylesheet";
+  linkElement.href = "css/themes/default/style.min.css"; 
+  document.head.appendChild(linkElement);
+
+
+script src="js/jstree.min.js"
+table
+  colgroup
+    col width="300px" valign="top"
+    col width="90%"
+  tr
+    td valign="top"
+      input type="text" id="search" value="" class="input" style="margin:0em auto 1em auto; display:block; padding:4px; border-radius:4px; border:1px solid silver;"
+      div#tree
+    td
+      div#test
+
+
+javascript:
+    $.jstree.defaults.core.themes.responsive = true; 
+    request = $.getJSON("/browse/repository");
+    var data;
+    request.complete(function() {
+     data = JSON.parse(request.responseText);
+     $('#tree').jstree({
+       'plugins': ["search","state"],
+       'core': {
+         'data': data
+       }
+     });
+    });
+
+    var to = false;
+    $('#search').keyup(function () {
+      if(to) { clearTimeout(to); }
+      to = setTimeout(function () {
+        var v = $('#search').val();
+        $('#tree').jstree(true).search(v);
+      }, 250);
+    });				    
+
+    $('#tree').on("activate_node.jstree", function(e,data){
+         console.log(data);	  
+      if (data.node.a_attr.target == "contentFrame") {
+        $("#test").load(data.node.a_attr.href);
+      }
+    })

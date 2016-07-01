@@ -1,0 +1,51 @@
+javascript:
+  $('body').on( 'click','button', function(){
+    var tmp = this.id.split('_');
+    $("#" + this.id).prop('disabled', true);
+    setTimeout(function (){
+       var revers = (tmp[0] == 'start')? 'stop' : 'start'
+       revers += "_" + tmp[1]
+       console.log(revers);
+       $("#" + revers).prop('disabled', false);
+       console.log($("#" + revers).prop('disabled'));
+       if (tmp[0] == 'stop'){   
+          $("#" + tmp[1]).removeClass('uk-badge-success').addClass('uk-badge-danger');
+	  $("#" + tmp[1]).text('OFF');
+        }else{
+          $("#" + tmp[1]).removeClass('uk-badge-danger').addClass('uk-badge-success');
+	  $("#" + tmp[1]).text('ON');
+        }
+    }, 3000);
+  });
+div.uk-panel
+  h2.uk-panel-title(data-uk-margin)
+    i.uk-icon-cogs
+    | Runners Process Manager
+    br /
+    table.uk-table
+      caption Activity of Runners :
+      thead
+        tr
+          th Runners
+          th Actions
+          th Status
+      tbody
+        - @runners.each do |item|
+          tr
+            td 
+              = item[:service]
+            td
+              div.uk-button-group
+                - if item[:status] == "true"
+                  button.uk-button(id="start_#{item[:service]}" disabled): i.uk-icon-play
+                  button.uk-button(id="stop_#{item[:service]}"): i.uk-icon-stop
+                - else
+                  button.uk-button(id="start_#{item[:service]}"): i.uk-icon-play
+                  button.uk-button(id="stop_#{item[:service]}" disabled): i.uk-icon-stop
+            td
+              - if item[:status] == "true"
+                div.uk-badge.uk-badge-success.uk-badge-notifications(id="#{item[:service]}")
+                  | ON
+              - else
+                div.uk-badge.uk-badge-danger.uk-badge-notifications(id="#{item[:service]}")
+                 | OFF

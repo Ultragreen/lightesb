@@ -34,16 +34,19 @@ get '/' do
   slim :home
 end
 
-get '/active/process' do
+
+get '/runners' do
   data = ['LogDispatcher','Scheduler','Direct','MQ','HTTP','InputsMQ']
-  result = []
+  @runners = []
   data.each do |i|
     status = (`ps aux | grep 'LightESB : #{i} Runner'|grep -v grep` != "")
-    result.push({ :service => i, :status => status.to_s})
-  end
-  content_type :json
-  JSON.pretty_generate(result)
+    @runners.push({ :service => i, :status => status.to_s})
+  end 
+  get_menu 0
+  slim :runners, :format => :html
 end
+
+
 
 
 get '/browse/repository' do

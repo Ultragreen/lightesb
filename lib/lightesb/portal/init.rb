@@ -4,7 +4,7 @@ require 'slim'
 require 'sass'
 require 'json'
 
-
+require "sinatra/streaming"
 
 
 Dir[File.dirname(__FILE__) + '/controllers/*.rb'].each {|file| require file  unless File.basename(file) == 'init.rb'}
@@ -12,6 +12,7 @@ Dir[File.dirname(__FILE__) + '/helpers/*.rb'].each {|file| require file  unless 
 
 
 #set :public, 'portal/public'
+#set :server, %w[puma]
 set :static, :enable
 set :public_folder, 'portal/public'
 set :views, "portal/views"
@@ -24,7 +25,7 @@ get('/styles.css'){ scss :styles }
 
 
 def get_menu(current)
-  @menu = ['Runners','Sequences','Repository','Scheduler']
+  @menu = ['Runners','Sequences','Repository','Scheduler','Administration','logs','Users']
   @current_item = nil
   @current_item = @menu[current] unless current == -1
 end
@@ -34,6 +35,12 @@ get '/' do
   slim :home
 end
 
+
+
+get '/sequences' do
+  get_menu 1
+  slim :sequences, :format => :html, :layout => true
+end
 
 get '/runners' do
   data = ['LogDispatcher','Scheduler','Direct','MQ','HTTP','InputsMQ']
@@ -46,6 +53,22 @@ get '/runners' do
   slim :runners, :format => :html
 end
 
+
+get '/logs' do
+  get_menu 5
+  @logs = ['/tmp/lightesb.log','/tmp/direct.log','/tmp/mq.log','/tmp/http.log']
+  slim :logs
+end
+
+get '/log/:filename' do
+  content_type :text
+  stream do |out|
+    io = IO.popen("tail -f /tmp/#{params[:filename]}")
+    procss = io.pid
+    out.errback { puts 'err';Process.kill 'TERM',procss; puts 'titi'}
+    io.each { |s| out.puts s;  }
+  end
+end
 
 
 
@@ -79,6 +102,21 @@ end
 get '/file/:filename' do
   get_menu 2
   @filename = params[:filename]
+  @content=<<EOF
+#include "syscalls.h"
+/* getchar:  simple buffered version */
+int getchar(void)
+{
+  static char buf[BUFSIZ];
+  static char *bufp = buf;
+  static int n = 0;
+  if (n == 0) {  /* buffer is empty */
+    n = read(0, buf, sizeof buf);
+    bufp = buf;
+  }
+  return (--n >= 0) ? (unsigned char) *bufp++ : EOF;
+}
+EOF
   slim :file, :layout => false
 end
 

@@ -5,9 +5,7 @@ javascript:
     setTimeout(function (){
        var revers = (tmp[0] == 'start')? 'stop' : 'start'
        revers += "_" + tmp[1]
-       console.log(revers);
        $("#" + revers).prop('disabled', false);
-       console.log($("#" + revers).prop('disabled'));
        if (tmp[0] == 'stop'){   
           $("#" + tmp[1]).removeClass('uk-badge-success').addClass('uk-badge-danger');
 	  $("#" + tmp[1]).text('OFF');
@@ -17,35 +15,34 @@ javascript:
         }
     }, 3000);
   });
-div.uk-panel
-  h2.uk-panel-title(data-uk-margin)
-    i.uk-icon-cogs
+div.uk-panel.uk-panel-box
+  h3.uk-panel-title
+    span.uk-icon-cogs.uk-icon-justify.uk-icon-large
     | Runners Process Manager
-    br /
-    table.uk-table
-      caption Activity of Runners :
-      thead
+  table.uk-table
+    caption Activity of Runners :
+    thead
+      tr
+        th Runners
+        th Actions
+        th Status
+    tbody
+      - @runners.each do |item|
         tr
-          th Runners
-          th Actions
-          th Status
-      tbody
-        - @runners.each do |item|
-          tr
-            td 
-              = item[:service]
-            td
-              div.uk-button-group
-                - if item[:status] == "true"
-                  button.uk-button(id="start_#{item[:service]}" disabled): i.uk-icon-play
-                  button.uk-button(id="stop_#{item[:service]}"): i.uk-icon-stop
-                - else
-                  button.uk-button(id="start_#{item[:service]}"): i.uk-icon-play
-                  button.uk-button(id="stop_#{item[:service]}" disabled): i.uk-icon-stop
-            td
+          td 
+            = item[:service]
+          td
+            div.uk-button-group
               - if item[:status] == "true"
-                div.uk-badge.uk-badge-success.uk-badge-notifications(id="#{item[:service]}")
-                  | ON
+                button.uk-button(id="start_#{item[:service]}" disabled): i.uk-icon-play
+                button.uk-button(id="stop_#{item[:service]}"): i.uk-icon-stop
               - else
-                div.uk-badge.uk-badge-danger.uk-badge-notifications(id="#{item[:service]}")
-                 | OFF
+                button.uk-button(id="start_#{item[:service]}"): i.uk-icon-play
+                button.uk-button(id="stop_#{item[:service]}" disabled): i.uk-icon-stop
+          td
+            - if item[:status] == "true"
+              div.uk-badge.uk-badge-success.uk-badge-notifications(id="#{item[:service]}")
+                | ON
+            - else
+              div.uk-badge.uk-badge-danger.uk-badge-notifications(id="#{item[:service]}")
+               | OFF

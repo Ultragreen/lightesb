@@ -6,20 +6,16 @@ javascript:
 
 
 script src="js/jstree.min.js"
-table
-  colgroup
-    col width="300px" valign="top"
-    col width="90%"
-  tr
-    td valign="top"
-      input type="text" id="search" value="" class="input" style="margin:0em auto 1em auto; display:block; padding:4px; border-radius:4px; border:1px solid silver;"
-      div#tree
-    td
-      div#test
+div.uk-grid
+  div.uk-width-3-10
+    input type="text" id="search" value="" class="input" style="margin:0em auto 1em auto; display:block; padding:4px; border-radius:4px; border:1px solid silver;"
+    div#tree
+  div.uk-width-7-10
+    iframe.uk-responsive-width.uk-width-1-1#frame src="" width="750px" height="600px" frameborder="0" allowfullscreen="allowfullscreen"
 
 
 javascript:
-    $.jstree.defaults.core.themes.responsive = true; 
+    $.jstree.defaults.core.themes.responsive = false; 
     request = $.getJSON("/browse/repository");
     var data;
     request.complete(function() {
@@ -44,6 +40,7 @@ javascript:
     $('#tree').on("activate_node.jstree", function(e,data){
          console.log(data);	  
       if (data.node.a_attr.target == "contentFrame") {
-        $("#test").load(data.node.a_attr.href);
+         $("#frame").attr("src", data.node.a_attr.href);
+      	 // $("#test").load(data.node.a_attr.href);
       }
     })

@@ -1,1 +1,49 @@
-h2 = @filename
+doctype 5
+html lang="fr-fr" dir="ltr"
+  head
+    title== "The tiny mini Ruby ESB"
+    meta charset="utf-8"
+    link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"
+    link rel="stylesheet" href="/css/uikit.gradient.min.css"
+    link rel="stylesheet" href="/css/components/sticky.gradient.min.css"
+    link rel="stylesheet" href="/styles.css"
+    link rel="stylesheet" href="/codemirror/lib/codemirror.css"
+    link rel="stylesheet" href="/codemirror/addon/dialog/dialog.css"    
+
+    script src="/js/jquery.min.js"
+    script src="/js/uikit.min.js"
+    script src="/js/components/sticky.min.js"
+    script src="/codemirror/lib/codemirror.js"
+    script src="/codemirror/mode/clike/clike.js"
+    script src="/codemirror/keymap/emacs.js"
+    script src="/codemirror/addon/edit/matchbrackets.js"
+    script src="/codemirror/addon/comment/comment.js"
+    script src="/codemirror/addon/dialog/dialog.js"
+    script src="/codemirror/addon/search/searchcursor.js"
+    script src="/codemirror/addon/search/search.js"
+
+  body
+    div.uk-grid
+      div.uk-width-1-1.uk-container.uk-container-center.uk-margin-left
+        div.uk-placeholder
+        h2 = @filename
+        form
+          textarea#code name="code"
+            = @content
+
+
+
+        javascript:
+          console.log('test');
+          CodeMirror.commands.save = function() {
+           var elt = editor.getWrapperElement();
+           elt.style.background = "#def";
+           setTimeout(function() { elt.style.background = ""; }, 300);
+          };
+
+          var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+           lineNumbers: true,
+           mode: "text/x-csrc",
+           keyMap: "emacs"
+         });
+

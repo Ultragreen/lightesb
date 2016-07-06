@@ -1,31 +1,46 @@
+require 'thor'
+require 'lightesb/application'
+
+
 module LightESBCLI
 
   class Runners < Thor
 
+    def initialize(*args)
+      @application = LightESB::Application::new
+      super
+    end
+
     desc "start <runner> ", "Start the LightESB Runners named <runner>"
     def start(runner)
-      # implement git remote add
+      @application.start :runner => runner
     end
  
     desc "startall", "Start all the LightESB runenrs"
     def startall
+      @application.startall
     end
 
 
     desc "stop <runner> ", "Stop the LightESB Runners named <runner>"
     def stop(runner)
-      # implement git remote add
+      @application.stop :runner => runner
     end
  
     desc "stopall", "Stop all the LightESB runenrs"
     def stopall
+      @application.stopall
     end
     
   end
  
-  class LightESBCtl < Thor
- 
+  class LightESBCtl < Thor 
     desc "runners SUBCOMMAND ...ARGS", "manage the LightESB Runners"
     subcommand "runners", Runners
   end
+  
 end
+
+
+
+LightESBCLI::LightESBCtl.start(ARGV)

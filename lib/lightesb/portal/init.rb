@@ -3,10 +3,12 @@ require 'sinatra'
 require 'slim'
 require 'sass'
 require 'json'
-
+require 'rest-client'
 require "sinatra/streaming"
 require "lightesb" 
 require 'lightesb/application'
+
+require 'pp'
 
 Dir[File.dirname(__FILE__) + '/controllers/*.rb'].each {|file| require file  unless File.basename(file) == 'init.rb'}
 Dir[File.dirname(__FILE__) + '/helpers/*.rb'].each {|file| require file  unless File.basename(file) == 'init.rb'}
@@ -27,7 +29,7 @@ get('/styles.css'){ scss :styles }
 
 
 def get_menu(current)
-  @menu = ['Runners','Sequences','Repository','Scheduler','Administration','logs','Users']
+  @menu = ['Runners','Sequences','Repository','Scheduler','Administration','logs','Users','RestCLIENT']
   @current_item = nil
   @current_item = @menu[current] unless current == -1
 end
@@ -37,6 +39,26 @@ get '/' do
   slim :home
 end
 
+
+get '/restclient' do
+  get_menu 7
+  slim :restclient,  :format => :html
+end
+
+post '/restclient/query' do
+  @method = params[:method]
+  @url = params[:url]
+  @notfound = false
+  begin 
+    @result = RestClient::Request.execute(method: @method.to_sym, url: @url,timeout: 10)
+  rescue SocketError
+    @result = false
+  rescue RestClient::NotFound => e
+    @notfound = true
+    @result = e.response
+  end
+  slim :restclient_result,  :format => :html, :layout => false
+end
 
 
 get '/sequences' do

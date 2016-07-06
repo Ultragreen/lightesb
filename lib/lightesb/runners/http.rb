@@ -30,6 +30,7 @@ module LightESB
       def launch
         self.class.const_set :SinatraApp, Class.new(Sinatra::Base)  
         SinatraApp.set :bind, '0.0.0.0'
+        SinatraApp.set :port, '8001'
         @log.info " [!] Defining HTTP Connector on 0.0.0.0"
         @routes.each do |item|
           item[:verb].each do |verb|

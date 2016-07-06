@@ -1,0 +1,31 @@
+module LightESBCLI
+
+  class Runners < Thor
+
+    desc "start <runner> ", "Start the LightESB Runners named <runner>"
+    def start(runner)
+      # implement git remote add
+    end
+ 
+    desc "startall", "Start all the LightESB runenrs"
+    def startall
+    end
+
+
+    desc "stop <runner> ", "Stop the LightESB Runners named <runner>"
+    def stop(runner)
+      # implement git remote add
+    end
+ 
+    desc "stopall", "Stop all the LightESB runenrs"
+    def stopall
+    end
+    
+  end
+ 
+  class LightESBCtl < Thor
+ 
+    desc "runners SUBCOMMAND ...ARGS", "manage the LightESB Runners"
+    subcommand "runners", Runners
+  end
+end

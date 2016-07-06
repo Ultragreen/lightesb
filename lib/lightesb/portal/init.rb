@@ -5,7 +5,8 @@ require 'sass'
 require 'json'
 
 require "sinatra/streaming"
-
+require "lightesb" 
+require 'lightesb/application'
 
 Dir[File.dirname(__FILE__) + '/controllers/*.rb'].each {|file| require file  unless File.basename(file) == 'init.rb'}
 Dir[File.dirname(__FILE__) + '/helpers/*.rb'].each {|file| require file  unless File.basename(file) == 'init.rb'}
@@ -14,12 +15,13 @@ Dir[File.dirname(__FILE__) + '/helpers/*.rb'].each {|file| require file  unless 
 #set :public, 'portal/public'
 #set :server, %w[puma]
 set :static, :enable
-set :public_folder, 'portal/public'
-set :views, "portal/views"
+set :public_folder, 'lib/lightesb/portal/public'
+set :views, "lib/lightesb/portal/views"
 set :bind, '0.0.0.0'
 set :port, '8000'
 Slim::Engine.set_options pretty: true
 
+$application = LightESB::Application::new
 
 get('/styles.css'){ scss :styles }
 
@@ -51,6 +53,12 @@ get '/runners' do
   end 
   get_menu 0
   slim :runners, :format => :html
+end
+
+get '/runners/:action/:name' do
+  content_type :text
+  res = $application.send params[:action].to_sym ,{ :runner => params[:name]} 
+  res.to_s
 end
 
 

@@ -2,18 +2,35 @@ javascript:
   $('body').on( 'click','button', function(){
     var tmp = this.id.split('_');
     $("#" + this.id).prop('disabled', true);
-    setTimeout(function (){
-       var revers = (tmp[0] == 'start')? 'stop' : 'start'
-       revers += "_" + tmp[1]
-       $("#" + revers).prop('disabled', false);
-       if (tmp[0] == 'stop'){   
-          $("#" + tmp[1]).removeClass('uk-badge-success').addClass('uk-badge-danger');
+    var url = "/runners/" + tmp[0] + "/" + tmp[1]; 
+    $.get(url, function( data ) {
+      var revers = (tmp[0] == 'start')? 'stop' : 'start'
+      revers += "_" + tmp[1]
+      console.log('toto');
+      console.log(data);
+      if (data == 'true') {
+        $("#" + revers).prop('disabled', false);
+        if (tmp[0] == 'stop'){   
+          $("#" + tmp[1]).removeClass('uk-badge-success').addClass('uk-badge-warning');
 	  $("#" + tmp[1]).text('OFF');
         }else{
-          $("#" + tmp[1]).removeClass('uk-badge-danger').addClass('uk-badge-success');
+          $("#" + tmp[1]).removeClass('uk-badge-warning').addClass('uk-badge-success');
 	  $("#" + tmp[1]).text('ON');
         }
-    }, 3000);
+      }
+      else
+      {
+        $("#" + this.id).prop('disabled', false);
+      }
+     }).fail(function() {
+         $("#" + this.id).prop('disabled', true);
+	 $("#" + tmp[1]).text('ERROR');
+	 if (tmp[0] == 'stop'){
+           $("#" + tmp[1]).removeClass('uk-badge-success').addClass('uk-badge-danger');
+         }else{
+           $("#" + tmp[1]).removeClass('uk-badge-danger').addClass('uk-badge-warning');
+         }	 
+     });  
   });
 div.uk-panel.uk-panel-box
   h3.uk-panel-title

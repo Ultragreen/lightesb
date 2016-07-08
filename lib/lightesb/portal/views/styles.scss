@@ -1,2 +1,16 @@
 .tm-background { background: #252525; }
 .tm-container { background: #ffffff; }
+
+#footer {
+  background:#f5f5f5;
+  padding: 100px 0;
+  height: 100px;
+}
+
+.with_bg {
+  background-color:white;
+  background-image:url(images/logo_light.png);
+  background-repeat:no-repeat;
+  background-position:center center;
+  background-attachment:fixed;
+}

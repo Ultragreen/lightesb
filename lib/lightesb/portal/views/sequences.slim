@@ -13,10 +13,12 @@ script src="/js/jquery.flowchart.min.js"
 
 
 div
-  textarea#flowchart_data
+  textarea#flowchart_data.with_bg
 
 javascript:
-  $('.flowchart-container').css({"width":"500px"});
-  $('.flowchart-container').css({"height":"500px"});
+  $('.flowchart-container').css({"border-radius": "5px 10px 0 5px" });
+  $('.flowchart-container').css({"border": "1px solid grey" });
+  $('.flowchart-container').css({ "width":"1000px" });
+  $('.flowchart-container').css({ "height":"500px" });
 
 script src="/js/sequence_flowchart.js"

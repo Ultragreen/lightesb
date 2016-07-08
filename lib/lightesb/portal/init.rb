@@ -7,6 +7,7 @@ require 'rest-client'
 require "sinatra/streaming"
 require "lightesb" 
 require 'lightesb/application'
+require "bunny"
 
 require 'pp'
 
@@ -29,7 +30,7 @@ get('/styles.css'){ scss :styles }
 
 
 def get_menu(current)
-  @menu = ['Runners','Sequences','Repository','Scheduler','Administration','logs','Users','RestCLIENT']
+  @menu = ['Runners','Sequences','Repository','Scheduler','Administration','logs','Users','RestCLIENT','MQClient']
   @current_item = nil
   @current_item = @menu[current] unless current == -1
 end
@@ -37,6 +38,30 @@ end
 get '/' do
   get_menu -1
   slim :home
+end
+
+
+get '/mqclient' do
+  get_menu 8
+  slim :mqclient,  :format => :html
+end
+
+post '/mqclient/query' do
+  @queue = params[:queue]
+  @text = params[:text]
+  begin
+    conn = Bunny.new
+    conn.start
+    ch   = conn.create_channel
+    q    = ch.queue(@queue)
+    ch.default_exchange.publish(@text, :routing_key => q.name)
+    conn.close
+    @result = true
+  rescue Exception
+    @result = false
+  end
+  content_type :text
+  @result.to_s
 end
 
 

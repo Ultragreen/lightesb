@@ -1,0 +1,50 @@
+h2 MQ Client
+script src="js/components/notify.js"
+
+div.uk-grid
+  div.uk-width-1-1
+    div.uk-panel.uk-panel-box
+      h3.uk-panel-title
+        i.uk-icon-question-circle
+         |  &nbsp;&nbsp;Publish
+      form.uk-form#query action="/mqclient/query" method="POST"
+        fieldset(data-uk-margin)
+          div.uk-grid
+            div.uk-width-3-10
+              input#queue.uk-width-1-1 type="text" placeholder="queue" name="queue"
+            div.uk-width-5-10
+              textarea#text.uk-width-1-1 rows="4" cols="50" type="text" placeholder="text" name="text"
+            div.uk-width-1-10
+              input.uk-button.uk-button-primary type="submit" value="Send"
+
+div.uk-placeholder
+  div.uk-width-1-1
+    div.uk-panel.uk-panel-box
+      h3.uk-panel-title
+        i.uk-icon-share-square
+          |  &nbsp;&nbsp;Subscribe
+          div#suscribe.uk-width-1-1
+
+javascript:
+  $('#query').submit(function() {
+    console.log($(this).serialize());
+    $.ajax({
+      data: $(this).serialize(),
+      type: $(this).attr('method'),
+      url: $(this).attr('action'),
+      success: function(response) {
+	if (response == 'true'){
+          UIkit.notify("Message send", {status:'success'});
+	}
+	else
+	{
+	  UIkit.notify("Can't send your message !", {status:'danger'});
+	}
+        
+      },
+      error: function(resultat, statut, erreur){
+        UIkit.notify("Can't send your message !", {status:'danger'});
+      }
+    });
+    return false;
+  });

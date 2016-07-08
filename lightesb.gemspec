@@ -25,7 +25,20 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'roodi', '~> 3.1', '>= 3.1.1'
   spec.add_development_dependency 'code_statistics', '~> 0.2', '>= 0.2.13'
   spec.add_development_dependency 'yard-rspec', '~> 0.1'
+  spec.add_dependency 'bunny'
+  spec.add_dependency 'carioca'
+  spec.add_dependency 'rufus-scheduler'
+    spec.add_dependency 'sinatra'
 
+    spec.add_dependency 'rest-client'
+    spec.add_dependency 'json'
+    spec.add_dependency 'slim'
+    spec.add_dependency 'sass'
+    spec.add_dependency 'activesupport'
+    spec.add_dependency 'xml-simple'
+        spec.add_dependency 'thor'
+    
+    
 
 #  spec.add_development_dependency "bundler_geminabox", "~> 0.2",'>= 0.2.0'	
   spec.add_development_dependency "version", "~> 1.0",'>= 1.0.0'	

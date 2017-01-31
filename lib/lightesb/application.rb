@@ -25,6 +25,7 @@ module LightESB
     end
 
     def shutdown
+      p 'test'
       return @launcher.stop_all
     end
 
@@ -34,6 +35,15 @@ module LightESB
 
     def stop(options = {})
       return @launcher.stop options
+    end
+
+
+    def list_runners
+      return  @launcher.list
+    end
+
+    def list_running_runners
+      return @launcher.list_running
     end
     
   end

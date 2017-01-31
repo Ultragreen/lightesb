@@ -11,26 +11,40 @@ module LightESBCLI
       super
     end
 
-    desc "start <runner> ", "Start the LightESB Runners named <runner>"
+    desc "start <runner> ", "Start the LightESB Runner named <runner>"
     def start(runner)
       @application.start :runner => runner
     end
  
-    desc "startall", "Start all the LightESB runenrs"
+    desc "startall", "Start all the LightESB runners"
     def startall
-      @application.startall
+      @application.launch
     end
 
 
-    desc "stop <runner> ", "Stop the LightESB Runners named <runner>"
+    desc "stop <runner> ", "Stop the LightESB Runner named <runner>"
     def stop(runner)
       @application.stop :runner => runner
     end
  
-    desc "stopall", "Stop all the LightESB runenrs"
+    desc "stopall", "Stop all the LightESB runners"
     def stopall
-      @application.stopall
+      @application.shutdown
     end
+
+    desc "list_running", "List all running LightESB runners"
+    def list_running_runners
+      @application.list_running_runners.each do |runners|
+        puts runners
+      end
+    end
+    
+    desc "list", "List all the LightESB runners"
+    def list
+      @application.list_runners.each do |runners|
+         puts runners
+      end
+    end	
     
   end
  

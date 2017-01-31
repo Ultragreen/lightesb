@@ -1,3 +1,5 @@
+require_relative '../../sequences/loader'
+
 module LightESB
   module Connectors
     class Connector

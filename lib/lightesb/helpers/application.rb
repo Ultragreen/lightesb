@@ -55,6 +55,8 @@ module LightESB
 
         fork do 
           Process.daemon 
+          $stdout.reopen("/tmp/out.txt", "w")
+          $stderr.reopen("/tmp/err.txt", "w")
           File.open(options[:pid_file],"w"){|f| f.puts Process.pid } if options[:pid_file]       
           $0 = options[:description]
           

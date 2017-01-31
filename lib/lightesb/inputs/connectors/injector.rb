@@ -2,7 +2,7 @@ require_relative './connector.rb'
 
 module LightESB
   module Connectors
-    class Scheduler < Connector
+    class Injector < Connector
       def initialize(options = {})
         @payload = options[:payload]
         @job = options[:job]

@@ -2,16 +2,59 @@ PATH
   remote: .
   specs:
     lightesb (0.0.1a)
+      activesupport
+      bunny
+      carioca
+      json
+      rest-client
+      rufus-scheduler
+      sass
+      sinatra
+      slim
+      thor
+      xml-simple
 
 GEM
   remote: https://rubygems.org/
   specs:
+    activesupport (4.2.6)
+      i18n (~> 0.7)
+      json (~> 1.7, >= 1.7.7)
+      minitest (~> 5.1)
+      thread_safe (~> 0.3, >= 0.3.4)
+      tzinfo (~> 1.1)
+    amq-protocol (2.0.1)
+    bunny (2.3.1)
+      amq-protocol (>= 2.0.1)
+    carioca (1.3)
+      dorsal (~> 1.0)
+      methodic (~> 1.2, >= 1.2)
+      xml-simple (~> 1.1, >= 1.1.5)
     code_statistics (0.2.13)
+    daemons (1.1.9)
     diff-lcs (1.2.5)
+    domain_name (0.5.20160615)
+      unf (>= 0.0.5, < 1.0.0)
+    dorsal (1.0)
+      daemons
+    http-cookie (1.0.2)
+      domain_name (~> 0.5)
+    i18n (0.7.0)
     json (1.8.3)
+    methodic (1.2)
+    mime-types (1.25.1)
+    minitest (5.8.4)
+    netrc (0.11.0)
+    rack (1.6.4)
+    rack-protection (1.5.3)
+      rack
     rake (10.5.0)
     rdoc (4.2.0)
       json (~> 1.4)
+    rest-client (2.0.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
     roodi (3.3.1)
       ruby_parser (~> 3.2, >= 3.2.2)
     rspec (2.14.1)
@@ -24,8 +67,27 @@ GEM
     rspec-mocks (2.14.6)
     ruby_parser (3.6.3)
       sexp_processor (~> 4.1)
+    rufus-scheduler (3.2.1)
+    sass (3.4.18)
     sexp_processor (4.4.4)
+    sinatra (1.4.4)
+      rack (~> 1.4)
+      rack-protection (~> 1.4)
+      tilt (~> 1.3, >= 1.3.4)
+    slim (3.0.0)
+      temple (~> 0.7.3)
+      tilt (>= 1.3.3, < 2.1)
+    temple (0.7.3)
+    thor (0.18.1)
+    thread_safe (0.3.5)
+    tilt (1.4.1)
+    tzinfo (1.2.2)
+      thread_safe (~> 0.1)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7.2)
     version (1.0.0)
+    xml-simple (1.1.5)
     yard (0.8.7.6)
     yard-rspec (0.1)
       yard

@@ -4,7 +4,8 @@ require 'slim'
 require 'sass'
 require 'json'
 require 'rest-client'
-require "sinatra/streaming"
+#require "sinatra/streaming"
+require "bcat" 
 require "lightesb" 
 require 'lightesb/application'
 require "bunny"
@@ -117,12 +118,16 @@ end
 
 get '/log/:filename' do
   content_type :text
-  stream do |out|
-    io = IO.popen("tail -f /tmp/#{params[:filename]}")
-    procss = io.pid
-    out.errback { puts 'err';Process.kill 'TERM',procss; puts 'titi'}
-    io.each { |s| out.puts s;  }
-  end
+  command = %[tail -f /tmp/#{params[:filename]}]
+  bcat = Bcat.new(command, :command => true)
+  bcat.to_app.call(env)
+  
+#  stream do |out|
+#    io = IO.popen("tail -f /tmp/#{params[:filename]}")
+#    procss = io.pid
+#    out.errback { puts 'err';Process.kill 'TERM',procss; puts 'titi'}
+#    io.each { |s| out.puts s;  }
+#  end
 end
 
 

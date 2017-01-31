@@ -5,13 +5,14 @@ configuration:
   :description: The Carioca Configuration Service
   :resource: configuration
   :init_options:
-    :config_file: '/data/locales/git/ultragreen/public/lightesb/conf/lightesb.conf' 
+    :config_file: '/root/lightesb/conf/lightesb.conf' 
     :xml_input: true
     :force_array:
       - sequence
       - step
       - log
       - backend
+      - job
 logclient:
   :service: LightESB::Services::LogClient
   :resource: lightesb:lib/lightesb/services/log_client.rb

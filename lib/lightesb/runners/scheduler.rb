@@ -54,18 +54,23 @@ module LightESB
         case content[:target]
         when :sequence
           content[:payload] = ''  if content[:payload].nil?
-          @log.info content.inspect
-          aproc = lambda { connector = LightESB::Connectors::Injector::new({:sequence => content[:sequence], :job => content[:job], :payload => content[:payload]})
+          aproc = lambda { connector = LightESB::Connectors::Injector::new({:sequence => content[:sequence], :job => content[:name], :payload => content[:payload]})
                            connector.send }
         when :proc
           aproc = eval "lambda { " + content[:proc] + " }" 
         end
+        @log.info " [S] Job #{content[:name]} scheduled"
         id = @server.send content[:type],  content[:value], nil, {:name => name} , &aproc
         @store.put :key => name, :value => id
       end
 
       def init_from_config
-        @configuration.settings[:esb][:schedules].each do |schedule|
+        @configuration.settings[:esb][:schedules][:job].each do |job|
+          job[:sequence] = job[:sequence].first unless  job[:sequence].nil?
+          job[:target] = job[:target].to_sym 
+          job[:type] = job[:type].to_sym unless  job[:type].nil?
+          schedule job
+          p job
         end
       end
       
@@ -76,13 +81,13 @@ module LightESB
           @queue.subscribe(:block => true) do |delivery_info, properties, body|
             content = YAML::load(body)
             content[:name] = 'unknown_job' if content[:name].nil?
-            @log.info " [x] Received scheduling action for job #{content[:name]}"
+            @log.info " [>] Received scheduling action for job #{content[:name]}"
 
             if content[:type] == :unschedule then
-              @log.info " [x] Record unschedule job #{content[:name]}"
+              @log.info " [R] Record unschedule job #{content[:name]}"
               self.unschedule content
             else
-              @log.info " [x] Record schedule for job #{content[:name]} #{content[:type]} : #{content[:value]}"
+              @log.info " [R] Record schedule for job #{content[:name]} #{content[:type]} : #{content[:value]}"
               self.schedule content
             end
           end
@@ -97,5 +102,5 @@ module LightESB
   end
 end
 
-
-
+#toto = LightESB::Runners::Scheduler::new
+#toto.launch

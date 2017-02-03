@@ -12,12 +12,16 @@ module LightESB
       end
       
       def scan
-        Dir["#{@path}/#{@pattern}"].each do |file|
-          data = @application.settings
-          @log.info " [>] running for #{file}"
-          file_content = ::File::readlines(file).join('\n')
-          FileUtils::rm file
-          init_sequence(file_content)
+        begin
+          Dir["#{@path}/#{@pattern}"].each do |file|
+            data = @application.settings
+            @log.info " [>] running for #{file}"
+            file_content = ::File::readlines(file).join('\n')
+            FileUtils::rm file
+            init_sequence(file_content)
+          end
+        rescue
+          @log.error " [E] cannot finalize input via connector File"
         end
       end
     end

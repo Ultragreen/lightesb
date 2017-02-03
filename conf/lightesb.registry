@@ -2,7 +2,7 @@
 configuration:
   :service: Carioca::Services::Configuration
   :type: :builtin
-  :description: The Carioca Configuration Service
+  :description: LightESB Configuration Service
   :resource: configuration
   :init_options:
     :config_file: '/root/lightesb/conf/lightesb.conf' 
@@ -34,4 +34,13 @@ repository:
   :type: :gem_file
   :init_options:
     :path: /tmp/lightesb/repository
-    
+dorsal:
+  :type: :gem
+  :resource: dorsal
+  :description: LightESB Distributed Services architecture
+  :service: Dorsal::Controller
+  :init_options:
+    :host: localhost
+    :port: 8686
+    :dir: /tmp/dorsal
+    :description: LightESB Ring Server

@@ -4,8 +4,7 @@ require 'slim'
 require 'sass'
 require 'json'
 require 'rest-client'
-#require "sinatra/streaming"
-require "bcat" 
+require "sinatra/streaming"
 require "lightesb" 
 require 'lightesb/application'
 require "bunny"
@@ -17,7 +16,7 @@ Dir[File.dirname(__FILE__) + '/helpers/*.rb'].each {|file| require file  unless 
 
 
 #set :public, 'portal/public'
-#set :server, %w[puma]
+set :server, %w[thin]
 set :static, :enable
 set :public_folder, 'lib/lightesb/portal/public'
 set :views, "lib/lightesb/portal/views"
@@ -117,17 +116,13 @@ get '/logs' do
 end
 
 get '/log/:filename' do
-  content_type :text
-  command = %[tail -f /tmp/#{params[:filename]}]
-  bcat = Bcat.new(command, :command => true)
-  bcat.to_app.call(env)
-  
-#  stream do |out|
-#    io = IO.popen("tail -f /tmp/#{params[:filename]}")
-#    procss = io.pid
-#    out.errback { puts 'err';Process.kill 'TERM',procss; puts 'titi'}
-#    io.each { |s| out.puts s;  }
-#  end
+  content_type :text  
+  stream do |out|
+    io = IO.popen("tail -f /tmp/#{params[:filename]}")
+    procss = io.pid
+    out.errback { puts 'err';Process.kill 'TERM',procss; puts 'titi'}
+    io.each { |s| out.puts s;  }
+  end
 end
 
 

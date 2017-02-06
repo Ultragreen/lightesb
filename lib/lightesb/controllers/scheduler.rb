@@ -19,13 +19,16 @@ module LightESB
       end
       
       def send(options = {})
+        format  = (options[:format].nil?)? :ruby : options[:format] 
         definition = options[:definition]
+        @log.info " [Q] Sending scheduling to MQ."
         conn = Bunny.new
         conn.start
         ch   = conn.create_channel
         q    = ch.queue("lightesb.scheduler.inputs")
-        p definition.to_yaml
-        ch.default_exchange.publish(definition.to_yaml, :routing_key => q.name)
+        request = definition.to_yaml if format == :ruby
+        request = definition if format == :yaml
+        ch.default_exchange.publish(request, :routing_key => q.name)
         conn.close
       end
       
@@ -62,17 +65,3 @@ end
 
 
 
-test = LightESB::Controllers::Scheduler::new
-#p test.list_user
-#p test.list_system
-#p test.info_for :job => 'test_in'
-#p test.info_for :job => 'system_input_file_rge_10', :explicit => true
-
-
-test.send :definition => { :name => 'mon_job', :target => :proc, :type => :every, :value => '3s', :proc => 'puts "titi"' }
-sleep 2
-p test.list_user
-
-test.unschedule :job => 'mon_job'
-sleep 2
-p test.list_user

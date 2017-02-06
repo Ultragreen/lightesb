@@ -12,16 +12,22 @@ require_relative '../inputs/connectors/file'
 
 module SchedulerHooks
   def on_pre_trigger(job, trigger_time)
-    @log.info "triggering job #{job.opts[:name]}..."
+    @log.info "triggering job #{job.opts[:name]}..." unless job.opts[:sys] and not @log_system
   end
   
   def on_post_trigger(job, trigger_time)
-    @log.info "triggered job #{job.opts[:name]}."
+    @log.info "triggered job #{job.opts[:name]}."  unless job.opts[:sys] and not @log_system
+    @store.del job.opts[:name] if job.id =~ /in_.*/
   end
 
   def init_log
     @registry = Carioca::Services::Registry.init :file => Dir.pwd + '/conf/lightesb.registry'
     @log = @registry.start_service :name => 'logclient', :params => { :source => self.class.to_s }
+    @store = Redis.new(:host => "localhost", :port => 6379, :db => 1)
+    @configuration  = @registry.start_service :name => 'configuration'
+    @base = @configuration.settings.esb.base.backends.backend.select {|x| x[:type] == 'redis' and  x[:destination] == 'scheduler'}.first[:base]
+    @store.select @base.to_i
+    @log_system = true if @configuration.settings.esb.base.scheduler.logs.system == 'true'
   end
     
 end
@@ -52,7 +58,6 @@ module LightESB
         else
           name = "user_" + content[:name]
         end
-        p name
         id = @store.get({:key => name})[:id]
         @server.unschedule(id)
         @store.del :key => name
@@ -81,7 +86,9 @@ module LightESB
           aproc = eval "lambda { " + content[:proc] + " }" 
         end
         @log.info " [S] Job #{record_name} scheduled"
-        id = @server.send content[:type],  content[:value], nil, {:name => name} , &aproc
+        opts = {:name => record_name, :sys => false}
+        opts[:sys] = true if content[:target] == :input
+        id = @server.send content[:type],  content[:value], nil, opts , &aproc
         @store.put :key => record_name, :value => { :id => id, :content => content }
       end
 

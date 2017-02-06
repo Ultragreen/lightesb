@@ -1,12 +1,16 @@
-require "bunny"
 
-conn = Bunny.new
-conn.start
+require 'drb/drb'
 
-ch   = conn.create_channel
-q = ch.queue("titi.tutu", :exclusive => false)
-q.subscribe(:block => true) do |delivery_info, properties, payload|
-  puts "Received #{payload}, message properties are #{properties.inspect}"
-end
+# The URI to connect to
+SERVER_URI="druby://127.0.0.1:40000"
 
+# Start a local DRbServer to handle callbacks.
+#
+# Not necessary for this small example, but will be required
+# as soon as we pass a non-marshallable object as an argument
+# to a dRuby call.
+DRb.start_service
 
+config = DRbObject.new_with_uri(SERVER_URI)
+
+p config.settings

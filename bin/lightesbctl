@@ -1,8 +1,64 @@
 require 'thor'
 require 'lightesb/application'
-
+require 'lightesb/controllers/scheduler'
+require 'pp'
+require 'yaml'
 
 module LightESBCLI
+
+
+  class Scheduler < Thor
+    def initialize(*args)
+      @controller = LightESB::Controllers::Scheduler::new
+      super
+    end
+
+    desc "listall", "List all jobs (system/user)"
+    def listall
+      puts "List of User's jobs :"
+      @controller.list_user.each do |job|
+        puts " * #{job}"
+      end
+      puts "List of System's jobs :"
+      @controller.list_system.each do |job|
+        puts " * #{job}"
+      end
+    end
+
+
+    desc "info <JOB>","Give description of the job <JOB>"
+    def show(job)
+      pp @controller.info_for :job => job 
+    end
+
+    #p test.info_for :job => 'system_input_file_rge_10', :explicit => true
+
+
+
+    desc "unschedule <job> ", "unschedule the job <job>"
+    def unschedule(job)
+      @controller.unschedule :job => job.chomp
+    end
+
+    desc "send", "Send YAML definition in STDIN"
+    def send
+    	puts 'Enter definition in YAML and \n + CTRL + D' if STDIN.tty?
+    	definition = STDIN.read.chomp
+	print 'Sending request ...'
+	@controller.send :definition => definition, :format => :yaml
+        print "[OK]\n"	
+    end
+
+    desc "listuser", "List all user jobs"
+    def listuser
+            puts "List of User's jobs :"
+      @controller.list_user.each do |job|
+        puts " * #{job}"
+        pp @controller.info_for :job => job
+      end
+    end
+    
+  end
 
   class Runners < Thor
 
@@ -50,8 +106,11 @@ module LightESBCLI
  
   class LightESBCtl < Thor 
     desc "runners SUBCOMMAND ...ARGS", "manage the LightESB Runners"
-    subcommand "runners", Runners
-  end
+        subcommand "runners", Runners
+	
+    desc "scheduler SUBCOMMAND ...ARGS", "manage the LightESB Scheduler"
+        subcommand "scheduler", Scheduler
+  end	
   
 end
 

@@ -1,5 +1,6 @@
 require "redis"
 require "carioca"
+require 'yaml'
 require "lightesb"
 
 module LightESB
@@ -15,12 +16,16 @@ module LightESB
         @@store.select @base.to_i
       end
       
+      def list(pattern='*')
+         return @@store.keys pattern
+      end
+      
       def get(options)
-        return @@store.get(options[:key])
+        return YAML::load(@@store.get(options[:key]))
       end
       
       def put(options)
-        @@store.set options[:key], options[:value]
+        @@store.set options[:key], options[:value].to_yaml
       end
       
       def del(options)

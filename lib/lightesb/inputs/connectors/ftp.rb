@@ -3,7 +3,7 @@ require 'net/ftp'
 
 module LightESB
   module Connectors
-    class FTP < Connector
+    class Ftp < Connector
       def initialize(options = {})
         
         @registry = Carioca::Services::Registry.init :file => 'conf/lightesb.registry'

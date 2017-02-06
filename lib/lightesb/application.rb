@@ -14,7 +14,6 @@ module LightESB
     include LightESB::Helpers::Application
     def initialize
       filename = File.dirname(__FILE__) + '/../../conf/lightesb.registry'
-      p filename
       @registry = Carioca::Services::Registry.init :file => filename
       @configuration = @registry.start_service :name => 'configuration'
       @launcher = LightESB::Launcher.new

@@ -30,13 +30,13 @@ module LightESB
     end
     
     def refresh
-      @content = YAML.load(@store.get({:key => @ref}))
+      @content = @store.get({:key => @ref})
     end
 
     
     private
     def persist!
-      @store.put :key => @ref, :value => @content.to_yaml
+      @store.put :key => @ref, :value => @content
     end
         
   end

@@ -17,7 +17,7 @@ module SchedulerHooks
   
   def on_post_trigger(job, trigger_time)
     @log.info "triggered job #{job.opts[:name]}."  unless job.opts[:sys] and not @log_system
-    @store.del job.opts[:name] if job.id =~ /in_.*/
+    @store.del job.opts[:name] if job.id =~ /^in_.*/
   end
 
   def init_log
@@ -66,7 +66,6 @@ module LightESB
 
       def schedule(content)
         name = content[:name]
-        @log.info content
         case content[:target]
         when :input
           content[:type] = :every
@@ -85,11 +84,11 @@ module LightESB
           record_name = "user_#{name}"
           aproc = eval "lambda { " + content[:proc] + " }" 
         end
-        @log.info " [S] Job #{record_name} scheduled"
         opts = {:name => record_name, :sys => false}
         opts[:sys] = true if content[:target] == :input
         id = @server.send content[:type],  content[:value], nil, opts , &aproc
         @store.put :key => record_name, :value => { :id => id, :content => content }
+        @log.info " [S] Job #{record_name} scheduled"
       end
 
       def init_from_config
@@ -114,6 +113,14 @@ module LightESB
       def launch
         self.init_from_config
         @log.info " [*] Waiting for schedules in #{@queue.name}."
+        Signal.trap("INT") {
+          shutdown
+        }
+
+        # Trap `Kill `
+        Signal.trap("TERM") {
+          shutdown
+        }
         begin
           @queue.subscribe(:block => true) do |delivery_info, properties, body|
             content = YAML::load(body)
@@ -122,24 +129,32 @@ module LightESB
             case  content[:target]
             when :unschedule then
               @log.info " [R] Record unschedule job #{content[:name]}"
-              self.unschedule content
+              unless  content[:explicit].nil?
+                self.unschedule content, content[:explicit]
+              else
+                self.unschedule content
+              end
             else
               @log.info " [R] Record schedule for job #{content[:name]} #{content[:type]} : #{content[:value]}"
               self.schedule content
             end
           end
         rescue Interrupt => _
-          @log.info " [END]  unsuscribe #{@queue.name}."
-          @channel.close
-          @connection.close
+          shutdown
         end
       end
 
       private
-      def get_input_connector
+      def shutdown
         
+        @store.flush
+#        @log.info " [END]  Flushing jobs in store."
+#        @log.info " [END]  unsuscribe #{@queue.name}."
+#        @channel.close
+#        @connection.close        
+        exit
       end
-
+      
       
     end
   end

@@ -1,0 +1,97 @@
+script src="js/components/notify.js"
+script src="/js/components/accordion.min.js"
+javascript:
+
+  $(document).on('submit','form#query',function(){
+    $.ajax({
+      data: $(this).serialize(),
+      type: $(this).attr('method'),
+      url: $(this).attr('action'),
+      success: function(response) {
+        if (response == 'true'){
+          UIkit.notify("Job schedule send", {status:'success'});
+        }
+        else
+        {
+          UIkit.notify("Can't send your job schedule !", {status:'danger'});
+        }
+
+      },
+      error: function(resultat, statut, erreur){
+        UIkit.notify("Can't send your job schedule!", {status:'danger'});
+      }
+    });
+    return false;
+  });
+
+  $(document).on( 'click','input.unschedule',function(){
+    id = this.id;
+    var url = "/unschedule/" +  id;
+    $.get(url, function( data ) {
+      if (data == 'true') {
+        UIkit.notify("Unschedule for " + id + " send", {status:'success'});
+      }
+      else
+      {
+        UIkit.notify("Unschedule for " + id + "failed !", {status:'danger'});
+      }
+     }).fail(function() {
+        UIkit.notify("Unschedule for " + id + "failed !", {status:'danger'});
+     });
+  });
+
+h1 Scheduler administration
+
+h2 Scheduled jobs
+
+div.uk-accordion(data-uk-accordion)
+  h3.uk-accordion-title User's Jobs
+  div.uk-accordion-content#user_list
+    table.uk-table
+      thead
+        tr
+          th Internal Name
+          th Details
+          th Actions
+      tbody
+        - @controller.list_user({:explicit => true}).each do |job|
+          tr
+            td <b>#{job}</b>
+            td
+              ul
+                - @controller.info_for({:job => job, :explicit => true})[:content].each do |hkey,hvalue|
+                  li <b>#{hkey.to_s}</b>: #{hvalue}
+            td
+              input.unschedule.uk-button.uk-button-primary id='#{job}' value='Unschedule'
+  h3.uk-accordion-title System's jobs
+  div.uk-accordion-content#system_list
+    table.uk-table
+      thead
+        tr
+          th Internal Name
+          th Details
+      tbody
+        - @controller.list_system.each do |job|
+          tr
+            td <b>#{job}</b>
+            td
+              ul
+                - @controller.info_for({:job => job, :explicit => true})[:content].each do |hkey,hvalue|
+                  li <b>#{hkey.to_s}</b>: #{hvalue}        
+
+h2 Send Schedules
+
+div.uk-panel.uk-panel-box
+      h3.uk-panel-title
+        i.uk-icon-question-circle
+         |  &nbsp;&nbsp;Send Schedule in YAML format
+      form.uk-form#query action="/mqclient/query" method="POST"
+        fieldset(data-uk-margin)
+          div.uk-grid
+            div.uk-width-3-10
+              input#queue type="hidden" name="queue" value="lightesb.scheduler.inputs"
+            div.uk-width-5-10
+              textarea#text.uk-width-1-1 rows="4" cols="50" type="text" placeholder="text" name="text"
+            div.uk-width-1-10
+              input.uk-button.uk-button-primary type="submit" value="Schedule"
+

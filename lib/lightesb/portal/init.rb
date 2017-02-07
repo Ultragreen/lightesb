@@ -8,6 +8,7 @@ require "sinatra/streaming"
 require "lightesb" 
 require 'lightesb/application'
 require "bunny"
+require "lightesb/controllers/scheduler"
 
 require 'pp'
 
@@ -35,9 +36,23 @@ def get_menu(current)
   @current_item = @menu[current] unless current == -1
 end
 
-get '/' do
-  get_menu -1
-  slim :home
+get '/scheduler' do
+  get_menu 3
+  @controller = LightESB::Controllers::Scheduler::new
+  slim :scheduler, :format => :html
+end
+
+get '/unschedule/:job' do
+  begin
+    @job  = params[:job]
+    @controller = LightESB::Controllers::Scheduler::new
+    @controller.unschedule :job => @job.chomp, :explicit => true
+    @result = true
+  rescue Exception
+    @result = false
+  end
+  content_type :text
+  @result.to_s
 end
 
 
@@ -63,6 +78,7 @@ post '/mqclient/query' do
   content_type :text
   @result.to_s
 end
+
 
 
 get '/restclient' do

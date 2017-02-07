@@ -37,7 +37,7 @@ module LightESB
         name = options[:job]
         explicit = options[:explicit]
         job = "user_#{job}" unless explicit
-        send :definition => { :name => name, :target => :unschedule }
+        send :definition => { :name => name, :target => :unschedule, :explicit => explicit }
       end
 
       def info_for (options ={:explicit => false})
@@ -47,8 +47,10 @@ module LightESB
         return @store.get :key => job
       end
       
-      def list_user
-        return list_internal('user_*').map {|i| i.gsub('user_','')}
+      def list_user(options = {:explicit => false})        
+        res = list_internal('user_*')
+        res.map! {|i| i.gsub('user_','')} unless options[:explicit]
+        return res
       end
 
       def list_system
